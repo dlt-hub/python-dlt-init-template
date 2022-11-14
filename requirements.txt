@@ -1,0 +1,2 @@
+git+https://github.com/scale-vector/dlt.git@devel#egg=python-dlt[postgres,postgres]
+requests
