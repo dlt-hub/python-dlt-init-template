@@ -4,7 +4,7 @@ import dlt
 
 # explain `dlt.source` a little here and last_id and api_key parameters
 @dlt.source
-def twitter_data(api_key, last_id):
+def twitter_data(api_url, api_key, last_id = 0):
     # example of Bearer Authentication
     # create authorization headers
     headers = {
@@ -15,7 +15,7 @@ def twitter_data(api_key, last_id):
     @dlt.resource
     def example_data():
         # make a call to the endpoint with request library
-        resp = requests.get("https://example.com/data?last_id=%i" % last_id, headers=headers)
+        resp = requests.get("%s?last_id=%i" % (api_url, last_id), headers=headers)
         resp.raise_for_status()
         # yield the data from the resource
         data = resp.json()
@@ -32,6 +32,6 @@ if __name__ == '__main__':
     # configure the pipeline
     dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset="twitter_data")
     # explain that api_key will be automatically loaded from secrets.toml or environment variable below
-    load_info = twitter_data(0).run()
+    load_info = dlt.run(twitter_data(dlt.config.value, dlt.secrets.value, last_id=819273998))
     #pretty print the information on data that was loaded
     print(load_info)
