@@ -39,8 +39,9 @@ if __name__ == '__main__':
     # chess_url in config.toml, credentials for postgres in secrets.toml, credentials always under credentials key
     # mind the full_refresh: it makes the pipeline to load to a distinct dataset each time it is run and always is resetting the schema and state
     info = dlt.pipeline(
+        pipeline_name="chess",
         destination="postgres",
-        dataset_name="chess",
+        dataset_name="chess_data",
         full_refresh=True
     ).run(
         chess(dlt.config.value, max_players=5, month=9)

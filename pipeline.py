@@ -1,11 +1,10 @@
 import requests
 import dlt
-from dlt.destinations import bigquery
 
 
 # explain `dlt.source` a little here and last_id and api_key parameters
 @dlt.source
-def twitter_data(last_id, api_key):
+def twitter_data(api_key, last_id):
     # example of Bearer Authentication
     # create authorization headers
     headers = {
@@ -31,7 +30,7 @@ def twitter_data(last_id, api_key):
 
 if __name__ == '__main__':
     # configure the pipeline
-    dlt.pipeline(destination=bigquery, dataset="twitter")
+    dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset="twitter_data")
     # explain that api_key will be automatically loaded from secrets.toml or environment variable below
     load_info = twitter_data(0).run()
     #pretty print the information on data that was loaded
