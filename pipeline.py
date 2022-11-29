@@ -2,49 +2,55 @@ import requests
 import dlt
 
 
-def _create_auth_headers(api_key):
+# a source is a container that logically groups resources
+# Example sources: REST api with many endpoints, database with many tables or google sheet with many tabs
+@dlt.source
+def twitter(api_url=dlt.config.value, twitter_bearer_token=dlt.secrets.value, last_id=0):
     # example of Bearer Authentication
     # create authorization headers
+    return twitter_resource(twitter_bearer_token)
+
+
+def _headers(twitter_bearer_token):
     headers = {
-        "Authorization": f"Bearer {api_key}"
+        "Authorization": f"Bearer {twitter_bearer_token}"
     }
     return headers
 
-# explain the `dlt.resource` and the default table naming, write disposition etc.
-@dlt.resource
-def example_resource(api_url=dlt.config.value, api_key=dlt.secrets.value, last_id = 0):
-    headers = _create_auth_headers(api_key)
 
-    # uncomment line below to see if your headers are correct (ie. include valid api_key)
-    # print(headers)
-    # print(api_url)
+# A resource is a function that produces data and yields it
+# Example resources: API endpoint, a database table, a file, or a sheet from a gsheets workbook...
+@dlt.resource(write_disposition="append")
+def twitter_resource(api_url=dlt.config.value, twitter_bearer_token=dlt.secrets.value):
+    headers = _headers(twitter_bearer_token)
 
-    # make a call to the endpoint with request library
-    resp = requests.get("%s?last_id=%i" % (api_url, last_id), headers=headers)
-    resp.raise_for_status()
-    # yield the data from the resource
-    data = resp.json()
+    # check if authentication headers look fine
+    print(headers)
 
-    # explain that data["items"] contains a list of items
-    yield data["items"]
+    # make an api call here
+    # response = requests.get(url, headers=headers, params=params)
+    # response.raise_for_status()
+    # yield response.json()
+
+    # test data for loading validation, delete it once you yield actual data
+    test_data = [{'id': 0}, {'id': 1}]
+    yield test_data
 
 
-# explain `dlt.source` a little here and last_id and api_key parameters
-@dlt.source
-def example_source(api_url=dlt.config.value, api_key=dlt.secrets.value, last_id = 0):
-    # return all the resources to be loaded
-    return example_resource(api_url, api_key, last_id)
+if __name__=='__main__':
+    # print credentials by running the resource
+    data = list(twitter_resource())
 
-if __name__ == '__main__':
-    # specify the pipeline name, destination and dataset name when configuring pipeline, otherwise the defaults will be used that are derived from the current script name
-    p = dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset_name="twitter_data", full_refresh=False)
+    # print responses from resource
+    print(data)
 
-    # uncomment line below to execute the resource function and see the returned data
-    # print(list(example_data()))
+    # run pipeline
+    # configure the pipeline with your destination details
+    p = dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset_name="twitter")
+    #run the pipeline with your parameters
+    load_info = p.run(twitter(dlt.config.value, dlt.secrets.value, last_id=819273998))
 
-    # explain that api_key will be automatically loaded from secrets.toml or environment variable below
-    load_info = p.run(
-        example_source(last_id=819273998)
-    )
-    #pretty print the information on data that was loaded
-    print(load_info)
+    # pretty print the information on data that was loaded
+    # print(load_info)
+
+
