@@ -42,7 +42,7 @@ if __name__=='__main__':
     data = list(twitter_resource())
 
     # print responses from resource
-    print(data)
+    # print(data)
 
     # run pipeline
     # configure the pipeline with your destination details
