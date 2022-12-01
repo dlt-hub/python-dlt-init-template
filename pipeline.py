@@ -46,9 +46,9 @@ if __name__=='__main__':
 
     # run pipeline
     # configure the pipeline with your destination details
-    p = dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset_name="twitter")
-    #run the pipeline with your parameters
-    load_info = p.run(twitter(dlt.config.value, dlt.secrets.value, last_id=819273998))
+    # p = dlt.pipeline(destination="bigquery", dataset_name="twitter")
+    # run the pipeline with your parameters
+    # load_info = p.run(twitter(dlt.config.value, dlt.secrets.value, last_id=819273998))
 
     # pretty print the information on data that was loaded
     # print(load_info)
