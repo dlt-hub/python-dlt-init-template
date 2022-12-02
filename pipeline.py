@@ -38,19 +38,17 @@ def twitter_resource(api_url=dlt.config.value, twitter_bearer_token=dlt.secrets.
 
 
 if __name__=='__main__':
+    # configure the pipeline with your destination details
+    pipeline = dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset_name="twitter")
+
     # print credentials by running the resource
     data = list(twitter_resource())
 
-    # print responses from resource
-    # print(data)
-
-    # run pipeline
-    # configure the pipeline with your destination details
-    # pipeline = dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset_name="twitter")
+    # print the data yielded from resource
+    print(data)
+    
     # run the pipeline with your parameters
-    # load_info = pipeline.run(twitter(dlt.config.value, dlt.secrets.value, last_id=819273998))
+    # load_info = pipeline.run(twitter())
 
     # pretty print the information on data that was loaded
     # print(load_info)
-
-
