@@ -1,28 +1,23 @@
-import requests
 import dlt
+import requests
 
 
-# a source is a container that logically groups resources
-# Example sources: REST api with many endpoints, database with many tables or google sheet with many tabs
 @dlt.source
-def twitter(api_url=dlt.config.value, twitter_bearer_token=dlt.secrets.value, last_id=0):
-    # example of Bearer Authentication
-    # create authorization headers
-    return twitter_resource(twitter_bearer_token)
+def source(api_secret_key=dlt.secrets.value):
+    return resource(api_secret_key)
 
 
-def _headers(twitter_bearer_token):
+def _create_auth_headers(api_secret_key):
+    """Constructs Bearer type authorization header which is the most common authorization method"""
     headers = {
-        "Authorization": f"Bearer {twitter_bearer_token}"
+        "Authorization": f"Bearer {api_secret_key}"
     }
     return headers
 
 
-# A resource is a function that produces data and yields it
-# Example resources: API endpoint, a database table, a file, or a sheet from a gsheets workbook...
 @dlt.resource(write_disposition="append")
-def twitter_resource(api_url=dlt.config.value, twitter_bearer_token=dlt.secrets.value):
-    headers = _headers(twitter_bearer_token)
+def resource(api_secret_key=dlt.secrets.value):
+    headers = _create_auth_headers(api_secret_key)
 
     # check if authentication headers look fine
     print(headers)
@@ -39,16 +34,17 @@ def twitter_resource(api_url=dlt.config.value, twitter_bearer_token=dlt.secrets.
 
 if __name__=='__main__':
     # configure the pipeline with your destination details
-    pipeline = dlt.pipeline(pipeline_name="twitter", destination="bigquery", dataset_name="twitter")
+    pipeline = dlt.pipeline(pipeline_name="pipeline", destination="bigquery", dataset_name="pipeline_data")
 
     # print credentials by running the resource
-    data = list(twitter_resource())
+    data = list(resource())
 
     # print the data yielded from resource
     print(data)
-    
+    exit()
+
     # run the pipeline with your parameters
-    # load_info = pipeline.run(twitter())
+    load_info = pipeline.run(source())
 
     # pretty print the information on data that was loaded
-    # print(load_info)
+    print(load_info)
