@@ -1,7 +1,7 @@
 # How this repo works
 1. `dlt init <source> <destination>` clones this repo, it uses the version of the `dlt` as a git tag to clone
 2. if the `<source>` is one of the variants ie. `chess` then the variant (ie. `chess.py`) is used as pipeline template, if not the `pipeline.py` will be used (after renaming to the <source>)
-2. id `--generic` options is passed the `pipeline_generic.py` template is used
+2. if `--generic` options is passed the `pipeline_generic.py` template is used
 3. it modifies the script by importing the right destination and using it in the pipeline
 4. it will rename all `dlt.source` and `dlt.resource` function defs and calls.
 5. it copies the .gitignore, the pipeline script created above and other files in `TEMPLATE_FILES` variable
