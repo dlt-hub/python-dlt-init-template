@@ -138,7 +138,7 @@ if __name__ == "__main__" :
     info = pipeline.run(
         chess(
             ['magnuscarlsen','vincentkeymer', 'dommarajugukesh', 'rpragchess'],
-            start_month='2022/10',
+            start_month='2022/11',
             end_month='2022/12'
         ).with_resources("players_games", "players_profiles")
     )
